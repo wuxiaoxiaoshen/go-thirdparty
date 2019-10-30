@@ -39,6 +39,31 @@ func party(c iris.Party) {
 		})
 
 	})
+	c.Get("/kafka/broker/{topic:string}", func(i iris.Context) {
+		topic := i.Params().GetString("topic")
+		b := NewBrokerAction("39.107.123.21:9092")
+		r := b.GetMetaMessage(topic)
+		b.Close()
+		i.JSON(iris.Map{
+			"data": r,
+		})
+	})
+	c.Get("/kafka/broker/list_group", func(i iris.Context) {
+		b := NewBrokerAction("39.107.123.21:9092")
+		r := b.GetListGroup()
+		b.Close()
+		i.JSON(iris.Map{
+			"data": r,
+		})
+	})
+	c.Get("/kafka/consumer", func(i iris.Context) {
+		c := NewConsumer([]string{"127.0.0.1:9092"}, "Group_test")
+		c.Do("data_sync", 0)
+		i.JSON(iris.Map{
+			"data": "success",
+		})
+
+	})
 }
 func main() {
 	app := newApp()
@@ -47,9 +72,9 @@ func main() {
 		ch := make(chan os.Signal, 1)
 		signal.Notify(ch,
 			os.Interrupt,
-			syscall.SIGINT, // register that too, it should be ok
+			syscall.SIGINT,
 			os.Kill,
-			syscall.SIGKILL, // register that too, it should be ok
+			syscall.SIGKILL,
 			syscall.SIGTERM,
 		)
 		select {

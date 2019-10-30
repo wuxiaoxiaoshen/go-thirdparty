@@ -20,7 +20,7 @@ func newDataSyncProducer(brokerList []string) sarama.SyncProducer {
 	config.Producer.Return.Successes = true
 	producer, err := sarama.NewSyncProducer(brokerList, config)
 	if err != nil {
-		log.Fatalln("Failed to start Sarama producer:", err)
+		log.Fatalln("Failed to start Sarama producer1:", err)
 	}
 	return producer
 
@@ -33,7 +33,7 @@ func newDataAsyncProducer(brokerList []string) sarama.AsyncProducer {
 	config.Producer.Flush.Frequency = 500 * time.Millisecond // Flush batches every 500ms
 	producer, err := sarama.NewAsyncProducer(brokerList, config)
 	if err != nil {
-		log.Fatalln("Failed to start Sarama producer:", err)
+		log.Fatalln("Failed to start Sarama producer2:", err)
 	}
 	go func() {
 		for err := range producer.Errors() {
