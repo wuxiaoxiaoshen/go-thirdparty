@@ -16,7 +16,7 @@ var Server *KafkaAction
 
 func init() {
 	// broker: 代表的就是 kafka 主机
-	Server = NewKafkaAction([]string{"127.0.0.1:9092"})
+	Server = NewKafkaAction([]string{"0.0.0.0:9092"})
 }
 
 func newApp() *iris.Application {
@@ -33,7 +33,7 @@ func party(c iris.Party) {
 			return
 		}
 		Server.Do(message)
-		Server.Run(message)
+		//Server.Run(message)
 		context.JSON(iris.Map{
 			"data": message,
 		})
@@ -56,14 +56,7 @@ func party(c iris.Party) {
 			"data": r,
 		})
 	})
-	c.Get("/kafka/consumer", func(i iris.Context) {
-		c := NewConsumer([]string{"127.0.0.1:9092"}, "Group_test")
-		c.Do("data_sync", 0)
-		i.JSON(iris.Map{
-			"data": "success",
-		})
 
-	})
 }
 func main() {
 	app := newApp()

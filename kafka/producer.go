@@ -61,7 +61,7 @@ func (K *KafkaAction) Do(v interface{}) {
 		log.Println(err)
 		return
 	}
-	fmt.Println(fmt.Sprintf("/%d/%d", partition, offset))
+	fmt.Println(fmt.Sprintf("/%d/%d/%+v", partition, offset, message))
 }
 
 func (K *KafkaAction) String() string {
@@ -73,7 +73,7 @@ func (K *KafkaAction) Run(v interface{}) {
 	K.DataAsyncProducer.Input() <- &sarama.ProducerMessage{
 		Topic: "data_async",
 		Key:   sarama.StringEncoder("data_async"),
-		Value: message,
+		Value: &message,
 	}
 }
 

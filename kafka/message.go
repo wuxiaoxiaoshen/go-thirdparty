@@ -11,12 +11,12 @@ type SendMessage struct {
 	err     error
 }
 
-func (S SendMessage) Length() int {
+func (S *SendMessage) Length() int {
 	b, e := json.Marshal(S)
 	S.encoded = b
 	S.err = e
 	return len(string(b))
 }
-func (S SendMessage) Encode() ([]byte, error) {
+func (S *SendMessage) Encode() ([]byte, error) {
 	return S.encoded, S.err
 }
