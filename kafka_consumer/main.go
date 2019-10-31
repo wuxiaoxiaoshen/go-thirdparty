@@ -5,6 +5,8 @@ import (
 	"os"
 	"os/signal"
 
+	"github.com/qiniu/x/log.v7"
+
 	"github.com/Shopify/sarama"
 )
 
@@ -21,7 +23,12 @@ func main() {
 			panic(err)
 		}
 	}()
-	consumer, err := master.ConsumePartition("data_sync", 0, sarama.OffsetOldest)
+	p, e := master.Partitions("topic-factor")
+	if e != nil {
+		log.Println(e)
+	}
+	fmt.Println("partition", p, master.HighWaterMarks())
+	consumer, err := master.ConsumePartition("topic-factor", 0, sarama.OffsetOldest)
 	if err != nil {
 		panic(err)
 	}

@@ -13,11 +13,15 @@ type KafkaAction struct {
 	DataAsyncProducer sarama.AsyncProducer
 }
 
+var TOPIC string
+
 func newDataSyncProducer(brokerList []string) sarama.SyncProducer {
+	//sarama.Logger = log.New(os.Stdout, "[Sarama]", log.Llongfile)
 	config := sarama.NewConfig()
 	config.Producer.RequiredAcks = sarama.WaitForAll // Wait for all in-sync replicas to ack the message
 	config.Producer.Retry.Max = 5                    // Retry up to 10 times to produce the message
 	config.Producer.Return.Successes = true
+	config.Producer.Partitioner = sarama.NewRoundRobinPartitioner
 	producer, err := sarama.NewSyncProducer(brokerList, config)
 	if err != nil {
 		log.Fatalln("Failed to start Sarama producer1:", err)
@@ -31,6 +35,7 @@ func newDataAsyncProducer(brokerList []string) sarama.AsyncProducer {
 	config.Producer.RequiredAcks = sarama.WaitForLocal       // Only wait for the leader to ack
 	config.Producer.Compression = sarama.CompressionSnappy   // Compress messages
 	config.Producer.Flush.Frequency = 500 * time.Millisecond // Flush batches every 500ms
+	config.Producer.Partitioner = sarama.NewRoundRobinPartitioner
 	producer, err := sarama.NewAsyncProducer(brokerList, config)
 	if err != nil {
 		log.Fatalln("Failed to start Sarama producer2:", err)
@@ -53,15 +58,20 @@ func NewKafkaAction(brokerList []string) *KafkaAction {
 func (K *KafkaAction) Do(v interface{}) {
 	message := v.(SendMessage)
 	partition, offset, err := K.DataSyncProducer.SendMessage(&sarama.ProducerMessage{
-		Topic: "data_sync",
-		Key:   sarama.StringEncoder("data_sync_key"),
+		Topic: TOPIC,
 		Value: &message,
 	})
 	if err != nil {
 		log.Println(err)
 		return
 	}
-	fmt.Println(fmt.Sprintf("/%d/%d/%+v", partition, offset, message))
+	value := map[string]string{
+		"method": message.Method,
+		"url":    message.URL,
+		"value":  message.Value,
+		"date":   message.Date,
+	}
+	fmt.Println(fmt.Sprintf("/%d/%d/%+v", partition, offset, value))
 }
 
 func (K *KafkaAction) String() string {
@@ -71,8 +81,7 @@ func (K *KafkaAction) String() string {
 func (K *KafkaAction) Run(v interface{}) {
 	message := v.(SendMessage)
 	K.DataAsyncProducer.Input() <- &sarama.ProducerMessage{
-		Topic: "data_async",
-		Key:   sarama.StringEncoder("data_async"),
+		Topic: TOPIC,
 		Value: &message,
 	}
 }

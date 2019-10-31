@@ -13,10 +13,13 @@ import (
 )
 
 var Server *KafkaAction
+var Brokers *BrokerAction
 
 func init() {
 	// broker: 代表的就是 kafka 主机
-	Server = NewKafkaAction([]string{"0.0.0.0:9092"})
+	Server = NewKafkaAction([]string{"127.0.0.1:9092"})
+	//Brokers = NewBrokerAction("39.107.123.21:9092")
+	Brokers = NewBrokerAction("127.0.0.1:9092")
 }
 
 func newApp() *iris.Application {
@@ -26,12 +29,13 @@ func newApp() *iris.Application {
 	return app
 }
 func party(c iris.Party) {
-	c.Post("/kafka/producer", func(context iris.Context) {
+	c.Post("/kafka/producer/{topic:string}", func(context iris.Context) {
 		var message SendMessage
 		if err := context.ReadJSON(&message); err != nil {
 			log.Println(err)
 			return
 		}
+		TOPIC = context.Params().GetString("topic")
 		Server.Do(message)
 		//Server.Run(message)
 		context.JSON(iris.Map{
@@ -41,19 +45,24 @@ func party(c iris.Party) {
 	})
 	c.Get("/kafka/broker/{topic:string}", func(i iris.Context) {
 		topic := i.Params().GetString("topic")
-		b := NewBrokerAction("39.107.123.21:9092")
-		r := b.GetMetaMessage(topic)
-		b.Close()
+		r := Brokers.GetMetaMessage(topic)
+		Brokers.Close()
 		i.JSON(iris.Map{
 			"data": r,
 		})
 	})
 	c.Get("/kafka/broker/list_group", func(i iris.Context) {
-		b := NewBrokerAction("39.107.123.21:9092")
-		r := b.GetListGroup()
-		b.Close()
+
+		r := Brokers.GetListGroup()
+		Brokers.Close()
 		i.JSON(iris.Map{
 			"data": r,
+		})
+	})
+	c.Get("/kafka/broker/topics", func(i iris.Context) {
+		topics := Brokers.GetTopics()
+		i.JSON(iris.Map{
+			"data": topics,
 		})
 	})
 
