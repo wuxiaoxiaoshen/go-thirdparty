@@ -70,6 +70,7 @@ func (B *BrokerAction) CreatTopic(topic string, partitions int32, replicationFac
 	topicRequest := sarama.CreateTopicsRequest{
 		TopicDetails: topicDetail,
 	}
+	B.broker[0].Open(nil)
 	r, e := B.broker[0].CreateTopics(&topicRequest)
 	if e != nil {
 		log.Println(e)
@@ -82,9 +83,10 @@ func (B *BrokerAction) DeleteTopic(topic string) bool {
 	detail := sarama.DeleteTopicsRequest{
 		Topics: []string{topic},
 	}
+	B.broker[0].Open(nil)
 	_, e := B.broker[0].DeleteTopics(&detail)
 	if e != nil {
-		log.Println(e)
+		log.Println(e.Error())
 		return false
 	}
 	return true
