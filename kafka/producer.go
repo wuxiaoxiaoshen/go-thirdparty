@@ -16,7 +16,6 @@ type KafkaAction struct {
 var TOPIC string
 
 func newDataSyncProducer(brokerList []string) sarama.SyncProducer {
-	//sarama.Logger = log.New(os.Stdout, "[Sarama]", log.Llongfile)
 	config := sarama.NewConfig()
 	config.Producer.RequiredAcks = sarama.WaitForAll // Wait for all in-sync replicas to ack the message
 	config.Producer.Retry.Max = 5                    // Retry up to 10 times to produce the message
