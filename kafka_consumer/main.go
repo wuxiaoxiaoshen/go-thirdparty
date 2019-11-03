@@ -13,7 +13,7 @@ import (
 func main() {
 	config := sarama.NewConfig()
 	config.Consumer.Return.Errors = true
-	brokers := []string{"39.107.123.21:9092"}
+	brokers := []string{"127.0.0.1:9092"}
 	master, err := sarama.NewConsumer(brokers, config)
 	if err != nil {
 		panic(err)
@@ -23,12 +23,11 @@ func main() {
 			panic(err)
 		}
 	}()
-	p, e := master.Partitions("frequent_customer_production")
+	_, e := master.Partitions("topic-python")
 	if e != nil {
 		log.Println(e)
 	}
-	fmt.Println("partition", p, master.HighWaterMarks())
-	consumer, err := master.ConsumePartition("frequent_customer_production", 0, sarama.OffsetOldest)
+	consumer, err := master.ConsumePartition("topic-python", 0, sarama.OffsetOldest)
 	if err != nil {
 		panic(err)
 	}
