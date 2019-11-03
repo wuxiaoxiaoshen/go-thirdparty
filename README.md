@@ -31,3 +31,7 @@
 ## kafka
 
 - [kafka 说明](README_KAFKA.md)
+
+## NSQ
+
+- [NSQ 说明](README_NSQ.md)
