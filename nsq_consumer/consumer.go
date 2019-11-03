@@ -40,7 +40,6 @@ func (N *NsqConsumerAction) Run(addr string) {
 		log.Println("nsqd-2", message.Timestamp, message.NSQDAddress, string(message.Body))
 		return nil
 	}))
-	log.Println("ddd")
 	// 直连
 	err := N.consumer.ConnectToNSQD(addr)
 	if err != nil {

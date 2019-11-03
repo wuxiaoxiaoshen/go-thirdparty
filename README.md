@@ -29,6 +29,7 @@
 - 代码方式
 
 ## kafka
+> tips: cd kafka && go run *.go
 
 - [kafka 说明](README_KAFKA.md)
 
