@@ -27,7 +27,7 @@ func main() {
 	if e != nil {
 		log.Println(e)
 	}
-	consumer, err := master.ConsumePartition("topic-python", 0, sarama.OffsetOldest)
+	consumer, err := master.ConsumePartition("topic-python", 0, sarama.OffsetNewest)
 	if err != nil {
 		panic(err)
 	}

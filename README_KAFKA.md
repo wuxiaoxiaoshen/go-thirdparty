@@ -69,7 +69,11 @@ type Partitioner interface {
 
 **生产者**
 
+**消费者**
 
+**消费组**
+
+- 重平衡机制： sticky, RoundRobin, Range
 
 
 > 集群版本

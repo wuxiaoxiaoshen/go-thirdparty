@@ -22,7 +22,7 @@ func init() {
 	Server = NewKafkaAction([]string{"127.0.0.1:9092"})
 	Brokers = NewBrokerAction("127.0.0.1:9092")
 	//Brokers = NewBrokerAction("127.0.0.1:9092")
-	Admins = NewAdminAction([]string{"127.0.0.1:9092"})
+	Admins = NewAdminAction([]string{"47.93.81.180:9092"})
 }
 
 func newApp() *iris.Application {
