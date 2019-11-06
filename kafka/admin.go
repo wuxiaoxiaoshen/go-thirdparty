@@ -17,7 +17,7 @@ func NewAdminAction(addr []string) *AdminAction {
 	sarama.Logger = log.New(os.Stdout, "[sarama ] ", log.LstdFlags)
 	admin, e := sarama.NewClusterAdmin(addr, config)
 	if e != nil {
-		log.Println(e)
+		log.Println(e, "ERROR")
 		return nil
 	}
 	return &AdminAction{c: admin}
