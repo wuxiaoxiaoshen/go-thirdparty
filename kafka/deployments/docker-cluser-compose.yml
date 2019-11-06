@@ -34,6 +34,7 @@ services:
     hostname: kfk1
     ports:
       - 19092:19092
+      - 19999:9999
     expose:
       - 19092
     links:
@@ -45,12 +46,14 @@ services:
       KAFKA_ZOOKEEPER_CONNECT: zookeeper-1:2181,zookeeper-2:2181,zookeeper-3:2181
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kfk1:19092
       KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:19092
+      JMX_PORT: 9999
   kfk2:
     image: index.docker.io/wurstmeister/kafka:latest
     container_name: kfk2
     hostname: kfk2
     ports:
       - 29092:29092
+      - 29999:9999
     expose:
       - 29092
     links:
@@ -62,12 +65,14 @@ services:
       KAFKA_ZOOKEEPER_CONNECT: zookeeper-1:2181,zookeeper-2:2181,zookeeper-3:2181
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kfk2:29092
       KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:29092
+      JMX_PORT: 9999
   kfk3:
     image: index.docker.io/wurstmeister/kafka:latest
     container_name: kfk3
     hostname: kfk3
     ports:
       - 39092:39092
+      - 39999:9999
     expose:
       - 39092
     links:
@@ -79,6 +84,7 @@ services:
       KAFKA_ZOOKEEPER_CONNECT: zookeeper-1:2181,zookeeper-2:2181,zookeeper-3:2181
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kfk3:39092
       KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:39092
+      JMX_PORT: 9999
   ui:
     image: index.docker.io/sheepkiller/kafka-manager:latest
     links:
