@@ -7,6 +7,7 @@ import (
 	"os/signal"
 	"sync"
 	"syscall"
+	"time"
 
 	"github.com/Shopify/sarama"
 )
@@ -17,8 +18,11 @@ type KafkaConsumerGroupAction struct {
 
 func NewKafkaConsumerGroupAction(brokers []string, groupId string) *KafkaConsumerGroupAction {
 	config := sarama.NewConfig()
+	sarama.Logger = log.New(os.Stdout, "[consumer_group]", log.Lshortfile)
 	// 重平衡策略
 	config.Consumer.Group.Rebalance.Strategy = sarama.BalanceStrategySticky
+	config.Consumer.Group.Session.Timeout = 6 * time.Second
+	config.Consumer.Group.Heartbeat.Interval = 2 * time.Second
 	config.Consumer.IsolationLevel = sarama.ReadCommitted
 	config.Consumer.Offsets.Initial = sarama.OffsetOldest
 	config.Version = sarama.V2_0_0_0

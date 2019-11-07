@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"log"
 	"os"
 	"os/signal"
 	"syscall"
@@ -18,10 +19,10 @@ var Admins *AdminAction
 
 func init() {
 	// broker: 代表的就是 kafka 主机
-	//Server = NewKafkaAction([]string{"0.0.0.0:19092"})
+	Server = NewKafkaAction([]string{"127.0.0.1:19092"})
 	//Brokers = NewBrokerAction("0.0.0.0:19092")
 	//Brokers = NewBrokerAction("127.0.0.1:9092"), "127.0.0.1:19092", "127.0.0.1:39092"
-	Admins = NewAdminAction([]string{"127.0.0.1:29092"})
+	Admins = NewAdminAction([]string{"127.0.0.1:19092"})
 }
 
 func newApp() *iris.Application {
@@ -31,20 +32,20 @@ func newApp() *iris.Application {
 	return app
 }
 func party(c iris.Party) {
-	//c.Post("/kafka/producer/{topic:string}", func(context iris.Context) {
-	//	var message SendMessage
-	//	if err := context.ReadJSON(&message); err != nil {
-	//		log.Println(err)
-	//		return
-	//	}
-	//	TOPIC = context.Params().GetString("topic")
-	//	Server.Do(message)
-	//	//Server.Run(message)
-	//	context.JSON(iris.Map{
-	//		"data": message,
-	//	})
-	//
-	//})
+	c.Post("/kafka/producer/{topic:string}", func(context iris.Context) {
+		var message SendMessage
+		if err := context.ReadJSON(&message); err != nil {
+			log.Println(err)
+			return
+		}
+		TOPIC = context.Params().GetString("topic")
+		Server.Do(message)
+		//Server.Run(message)
+		context.JSON(iris.Map{
+			"data": message,
+		})
+
+	})
 	//c.Get("/kafka/broker/{topic:string}", func(i iris.Context) {
 	//	topic := i.Params().GetString("topic")
 	//	r := Brokers.GetMetaMessage(topic)
@@ -93,10 +94,19 @@ func party(c iris.Party) {
 			"data": groups,
 		})
 	})
-	c.Get("/kafka/admin/create_topic/{topic:string}", func(i iris.Context) {
+	c.Post("/kafka/admin/create_topic/{topic:string}", func(i iris.Context) {
 		topic := i.Params().GetString("topic")
+		var params struct {
+			Partition int32 `json:"partition"`
+			Factor    int16 `json:"factor"`
+		}
+		e := i.ReadJSON(&params)
+		if e != nil {
+			log.Println(e)
+			return
+		}
 		fmt.Println("topic", topic)
-		ok := Admins.CreateTopic(topic, 10, 3)
+		ok := Admins.CreateTopic(topic, params.Partition, params.Factor)
 		i.JSON(iris.Map{
 			"data": ok,
 		})

@@ -32,6 +32,7 @@ services:
     image: index.docker.io/wurstmeister/kafka:latest
     container_name: kfk1
     hostname: kfk1
+    restart: always
     ports:
       - 19092:19092
       - 19999:9999
@@ -51,6 +52,7 @@ services:
     image: index.docker.io/wurstmeister/kafka:latest
     container_name: kfk2
     hostname: kfk2
+    restart: always
     ports:
       - 29092:29092
       - 29999:9999
@@ -70,6 +72,7 @@ services:
     image: index.docker.io/wurstmeister/kafka:latest
     container_name: kfk3
     hostname: kfk3
+    restart: always
     ports:
       - 39092:39092
       - 39999:9999
@@ -87,6 +90,7 @@ services:
       JMX_PORT: 9999
   ui:
     image: index.docker.io/sheepkiller/kafka-manager:latest
+    restart: always
     links:
       - zookeeper-1
       - zookeeper-2

@@ -78,6 +78,24 @@ type Partitioner interface {
 
 > 集群版本
 
+集群版本的表现形式：
+
+本质：
+- 多服务
+- 多主机
+
+服务多，主机多，直接如何通信，如何消息传递等。
+
+对外：
+- 单服务
+- 单主机
+
+只通过一个 broker，能访问到所有的 broker 信息。
+
+创建一个 TOPIC，如果不备份，分区会分布在不同的 broker 上。
+创建一个 TOPIC，如果备份数小于 broker 的数目，分区会分布在各 broker 上。比如 8 分区，2备份，那么broker 上共同存储 16个分区的日志
+创建一个 TOPIC，如果备份数大于 broker 的数目，创建失败。
+
 ## 运维监控
 
 - kafka-manager
