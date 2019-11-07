@@ -73,8 +73,12 @@ type Partitioner interface {
 
 **消费组**
 
-- 重平衡机制： sticky, RoundRobin, Range
+- 重平衡机制： Sticky, RoundRobin, Range
 
 
 > 集群版本
 
+## 运维监控
+
+- kafka-manager
+- kafkacat
