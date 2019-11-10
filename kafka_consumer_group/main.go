@@ -8,7 +8,7 @@ import (
 var KafkaConsumerGroup *KafkaConsumerGroupAction
 
 func init() {
-	KafkaConsumerGroup = NewKafkaConsumerGroupAction([]string{"47.93.81.180:9092"}, "Siren-Production-2")
+	KafkaConsumerGroup = NewKafkaConsumerGroupAction([]string{"localhost:9092"}, "Siren-Production-2")
 }
 func main() {
 	wg := &sync.WaitGroup{}
