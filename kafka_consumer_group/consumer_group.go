@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"os"
 	"os/signal"
@@ -21,11 +22,11 @@ func NewKafkaConsumerGroupAction(brokers []string, groupId string) *KafkaConsume
 	sarama.Logger = log.New(os.Stdout, "[consumer_group]", log.Lshortfile)
 	// 重平衡策略
 	config.Consumer.Group.Rebalance.Strategy = sarama.BalanceStrategySticky
-	config.Consumer.Group.Session.Timeout = 6 * time.Second
-	config.Consumer.Group.Heartbeat.Interval = 2 * time.Second
+	config.Consumer.Group.Session.Timeout = 20 * time.Second
+	config.Consumer.Group.Heartbeat.Interval = 6 * time.Second
 	config.Consumer.IsolationLevel = sarama.ReadCommitted
-	config.Consumer.Offsets.Initial = sarama.OffsetOldest
-	config.Version = sarama.V2_0_0_0
+	config.Consumer.Offsets.Initial = sarama.OffsetNewest
+	config.Version = sarama.V2_3_0_0
 	consumerGroup, e := sarama.NewConsumerGroup(brokers, groupId, config)
 	if e != nil {
 		log.Println(e)
@@ -77,9 +78,10 @@ func (K *KafkaConsumerGroupHandler) Cleanup(sarama.ConsumerGroupSession) error {
 	return nil
 }
 func (K *KafkaConsumerGroupHandler) ConsumeClaim(session sarama.ConsumerGroupSession, claim sarama.ConsumerGroupClaim) error {
-
 	for message := range claim.Messages() {
 		log.Printf("Message claimed: value = %s, timestamp = %v, topic = %s, partions = %d, offset = %d", string(message.Value), message.Timestamp, message.Topic, message.Partition, message.Offset)
+		lag := claim.HighWaterMarkOffset() - message.Offset
+		fmt.Println(lag)
 		session.MarkMessage(message, "")
 	}
 

@@ -18,6 +18,7 @@ var TOPIC string
 
 func newDataSyncProducer(brokerList []string) sarama.SyncProducer {
 	config := sarama.NewConfig()
+	config.Version = sarama.V2_3_0_0
 	config.Producer.RequiredAcks = sarama.WaitForAll // Wait for all in-sync replicas to ack the message
 	config.Producer.Retry.Max = 5                    // Retry up to 10 times to produce the message
 	config.Producer.Return.Successes = true

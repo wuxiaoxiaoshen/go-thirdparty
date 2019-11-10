@@ -19,10 +19,10 @@ var Admins *AdminAction
 
 func init() {
 	// broker: 代表的就是 kafka 主机
-	Server = NewKafkaAction([]string{"127.0.0.1:19092"})
-	//Brokers = NewBrokerAction("0.0.0.0:19092")
+	Server = NewKafkaAction([]string{"47.93.81.180:9092"})
+	Brokers = NewBrokerAction("47.93.81.180:9092")
 	//Brokers = NewBrokerAction("127.0.0.1:9092"), "127.0.0.1:19092", "127.0.0.1:39092"
-	Admins = NewAdminAction([]string{"127.0.0.1:19092"})
+	Admins = NewAdminAction([]string{"47.93.81.180:9092"})
 }
 
 func newApp() *iris.Application {
@@ -46,42 +46,42 @@ func party(c iris.Party) {
 		})
 
 	})
-	//c.Get("/kafka/broker/{topic:string}", func(i iris.Context) {
-	//	topic := i.Params().GetString("topic")
-	//	r := Brokers.GetMetaMessage(topic)
-	//	i.JSON(iris.Map{
-	//		"data": r,
-	//	})
-	//})
-	//c.Get("/kafka/broker/list_group", func(i iris.Context) {
-	//
-	//	r := Brokers.GetListGroup()
-	//	i.JSON(iris.Map{
-	//		"data": r,
-	//	})
-	//})
-	//c.Get("/kafka/broker/topics", func(i iris.Context) {
-	//	topics := Brokers.GetTopics()
-	//	i.JSON(iris.Map{
-	//		"data": topics,
-	//	})
-	//})
-	//c.Get("/kafka/broker/delete_topic/{topic:string}", func(i iris.Context) {
-	//	topic := i.Params().GetString("topic")
-	//	ok := Brokers.DeleteTopic(topic)
-	//	//fmt.Println(fmt.Sprintf("%+v", Brokers.broker[0]))
-	//	i.JSON(iris.Map{
-	//		"data": ok,
-	//	})
-	//})
-	//c.Get("/kafka/broker/create_topic/{topic:string}", func(i iris.Context) {
-	//	topic := i.Params().GetString("topic")
-	//	fmt.Println(topic)
-	//	r := Brokers.CreatTopic(topic, 10, 3)
-	//	i.JSON(iris.Map{
-	//		"data": r,
-	//	})
-	//})
+	c.Get("/kafka/broker/{topic:string}", func(i iris.Context) {
+		topic := i.Params().GetString("topic")
+		r := Brokers.GetMetaMessage(topic)
+		i.JSON(iris.Map{
+			"data": r,
+		})
+	})
+	c.Get("/kafka/broker/list_group", func(i iris.Context) {
+
+		r := Brokers.GetListGroup()
+		i.JSON(iris.Map{
+			"data": r,
+		})
+	})
+	c.Get("/kafka/broker/topics", func(i iris.Context) {
+		topics := Brokers.GetTopics()
+		i.JSON(iris.Map{
+			"data": topics,
+		})
+	})
+	c.Get("/kafka/broker/delete_topic/{topic:string}", func(i iris.Context) {
+		topic := i.Params().GetString("topic")
+		ok := Brokers.DeleteTopic(topic)
+		//fmt.Println(fmt.Sprintf("%+v", Brokers.broker[0]))
+		i.JSON(iris.Map{
+			"data": ok,
+		})
+	})
+	c.Get("/kafka/broker/create_topic/{topic:string}", func(i iris.Context) {
+		topic := i.Params().GetString("topic")
+		fmt.Println(topic)
+		r := Brokers.CreatTopic(topic, 10, 3)
+		i.JSON(iris.Map{
+			"data": r,
+		})
+	})
 	c.Get("/kafka/admin/topics", func(i iris.Context) {
 		topics := Admins.GetTopic()
 		i.JSON(iris.Map{
@@ -89,7 +89,7 @@ func party(c iris.Party) {
 		})
 	})
 	c.Get("/kafka/admin/list_groups", func(i iris.Context) {
-		groups := Admins.GetGroups()
+		groups := Admins.GetGroups([]string{"customer-group-1"})
 		i.JSON(iris.Map{
 			"data": groups,
 		})
@@ -148,5 +148,5 @@ func main() {
 			app.Shutdown(ctx)
 		}
 	}()
-	app.Run(iris.Addr(":8080"), iris.WithoutServerError(iris.ErrServerClosed))
+	app.Run(iris.Addr(":8081"), iris.WithoutServerError(iris.ErrServerClosed))
 }

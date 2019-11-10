@@ -8,11 +8,11 @@ import (
 var KafkaConsumerGroup *KafkaConsumerGroupAction
 
 func init() {
-	KafkaConsumerGroup = NewKafkaConsumerGroupAction([]string{"127.0.0.1:19092"}, "customer-group-1")
+	KafkaConsumerGroup = NewKafkaConsumerGroupAction([]string{"47.93.81.180:9092"}, "Siren-Production-2")
 }
 func main() {
 	wg := &sync.WaitGroup{}
 	wg.Add(1)
 	ctx, _ := context.WithCancel(context.Background())
-	KafkaConsumerGroup.Consume([]string{"topic-python", "topic-golang", "topic-js"}, *wg, ctx)
+	KafkaConsumerGroup.Consume([]string{"frequent_customer_dev", "store_frequent_customer_dev"}, *wg, ctx)
 }

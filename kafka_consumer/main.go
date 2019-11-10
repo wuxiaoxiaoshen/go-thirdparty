@@ -5,8 +5,6 @@ import (
 	"os"
 	"os/signal"
 
-	"github.com/qiniu/x/log.v7"
-
 	"github.com/Shopify/sarama"
 )
 
@@ -23,10 +21,6 @@ func main() {
 			panic(err)
 		}
 	}()
-	_, e := master.Partitions("topic-python")
-	if e != nil {
-		log.Println(e)
-	}
 	consumer, err := master.ConsumePartition("topic-python", 0, sarama.OffsetNewest)
 	if err != nil {
 		panic(err)

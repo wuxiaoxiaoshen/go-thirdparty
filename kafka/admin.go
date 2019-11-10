@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"os"
+	"time"
 
 	"github.com/Shopify/sarama"
 )
@@ -14,6 +15,9 @@ type AdminAction struct {
 func NewAdminAction(addr []string) *AdminAction {
 	config := sarama.NewConfig()
 	config.Version = sarama.V2_0_0_0
+	config.Producer.Retry.Max = 5
+	config.Producer.Retry.Backoff = 10 * time.Second
+	config.Metadata.Retry.Max = 3
 	sarama.Logger = log.New(os.Stdout, "[sarama ] ", log.LstdFlags)
 	admin, e := sarama.NewClusterAdmin(addr, config)
 	if e != nil {
@@ -32,8 +36,8 @@ func (A *AdminAction) GetTopic() interface{} {
 	}
 	return detail
 }
-func (A *AdminAction) GetGroups() interface{} {
-	detail, e := A.c.ListConsumerGroups()
+func (A *AdminAction) GetGroups(groupID []string) interface{} {
+	detail, e := A.c.DescribeConsumerGroups(groupID)
 	if e != nil {
 		log.Println(e)
 		return nil
