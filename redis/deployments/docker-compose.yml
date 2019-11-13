@@ -1,0 +1,19 @@
+version: "3"
+
+services:
+  redis:
+    image: redis:latest
+    container_name: redisLOCAL
+    restart: always
+    ports:
+      - 6377:6379
+    expose:
+      - 6377
+    networks:
+      localnet:
+        aliases:
+          - network-server
+    command: redis-server --appendonly yes
+networks:
+  localnet:
+    driver: bridge
