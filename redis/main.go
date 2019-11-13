@@ -35,4 +35,13 @@ func main() {
 		fmt.Println(KAction.Del("A"))
 
 	}
+	{
+		// list
+		LAction := NewListAction(&con)
+		con.Do("DEL", "list::A")
+		ok := LAction.LPush("list::A", "go", "python", "java")
+		fmt.Println(ok)
+		v, ok := LAction.LRange("list::A", 0, -1)
+		fmt.Println(v, ok)
+	}
 }
