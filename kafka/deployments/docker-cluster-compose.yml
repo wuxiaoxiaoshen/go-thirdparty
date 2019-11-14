@@ -10,9 +10,6 @@ services:
     environment:
       ZOO_MY_ID: 1
       ZOO_SERVERS: server.1=0.0.0.0:2888:3888;2181 server.2=zookeeper-2:2888:3888;2181 server.3=zookeeper-3:2888:3888;2181
-    volumes:
-      - /local/volumn/zookeeper1/data:/data
-      - /local/volumn/zookeeper1/datalog:/datalog
   zookeeper-2:
     image: zookeeper
     restart: always
@@ -22,9 +19,6 @@ services:
     environment:
       ZOO_MY_ID: 2
       ZOO_SERVERS: server.1=zookeeper-1:2888:3888;2181 server.2=0.0.0.0:2888:3888;2181 server.3=zookeeper-3:2888:3888;2181
-    volumes:
-      - /local/volumn/zookeeper2/data:/data
-      - /local/volumn/zookeeper2/datalog:/datalog
   zookeeper-3:
     image: zookeeper
     restart: always
@@ -34,9 +28,6 @@ services:
     environment:
       ZOO_MY_ID: 3
       ZOO_SERVERS: server.1=zookeeper-1:2888:3888;2181 server.2=zookeeper-2:2888:3888;2181 server.3=0.0.0.0:2888:3888;2181
-    volumes:
-      - /local/volumn/zookeeper3/data:/data
-      - /local/volumn/zookeeper3/datalog:/datalog
   kfk1:
     image: index.docker.io/wurstmeister/kafka:latest
     container_name: kfk1
@@ -56,9 +47,6 @@ services:
       KAFKA_ZOOKEEPER_CONNECT: zookeeper-1:2181,zookeeper-2:2181,zookeeper-3:2181
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kfk1:9092
       KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
-      JMX_PORT: 9999
-    volumes:
-      - /local/volumn/kfk1:/kafka/kafka-logs-kfk1
   kfk2:
     image: index.docker.io/wurstmeister/kafka:latest
     container_name: kfk2
@@ -78,9 +66,6 @@ services:
       KAFKA_ZOOKEEPER_CONNECT: zookeeper-1:2181,zookeeper-2:2181,zookeeper-3:2181
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kfk2:29092
       KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:29092
-      JMX_PORT: 9999
-    volumes:
-      - /local/volumn/kfk2:/kafka/kafka-logs-kfk2
   kfk3:
     image: index.docker.io/wurstmeister/kafka:latest
     container_name: kfk3
@@ -100,9 +85,6 @@ services:
       KAFKA_ZOOKEEPER_CONNECT: zookeeper-1:2181,zookeeper-2:2181,zookeeper-3:2181
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kfk3:39092
       KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:39092
-      JMX_PORT: 9999
-    volumes:
-      - /local/volumn/kfk3:/kafka/kafka-logs-kfk3
   ui:
     image: index.docker.io/sheepkiller/kafka-manager:latest
     restart: always
