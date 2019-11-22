@@ -1,0 +1,33 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: go-anything-data
+spec:
+  selector:
+    matchLabels:
+      app: go-anything
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: go-anything
+    spec:
+      containers:
+        - name: go-anything-container
+          image: swr.cn-north-1.myhuaweicloud.com/go-test/go-anything:v0.6
+          resources:
+            limits:
+              memory: "500Mi"
+              cpu: "0.5"
+            requests:
+              memory: "400Mi"
+              cpu: "0.4"
+          ports:
+            - containerPort: 9435
+          volumeMounts:
+            - mountPath: /go/src/go-anything
+              name: go
+      volumes:
+        - name: go
+          emptyDir:
+            {}
