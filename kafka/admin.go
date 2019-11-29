@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"time"
@@ -14,16 +15,20 @@ type AdminAction struct {
 
 func NewAdminAction(addr []string) *AdminAction {
 	config := sarama.NewConfig()
-	config.Version = sarama.V2_0_0_0
+	config.Version = sarama.V2_3_0_0
+	config.Net.SASL.Version = sarama.SASLHandshakeV1
 	config.Producer.Retry.Max = 5
 	config.Producer.Retry.Backoff = 10 * time.Second
 	config.Metadata.Retry.Max = 3
+	config.Net.ReadTimeout = 30 * time.Second
+	config.Consumer.Group.Session.Timeout = 20 * time.Second
 	sarama.Logger = log.New(os.Stdout, "[sarama ] ", log.LstdFlags)
 	admin, e := sarama.NewClusterAdmin(addr, config)
 	if e != nil {
 		log.Println(e, "ERROR")
 		return nil
 	}
+	fmt.Println(admin.ListTopics())
 	return &AdminAction{c: admin}
 
 }
@@ -31,7 +36,7 @@ func NewAdminAction(addr []string) *AdminAction {
 func (A *AdminAction) GetTopic() interface{} {
 	detail, e := A.c.ListTopics()
 	if e != nil {
-		log.Println(e)
+		log.Println("e", e)
 		return nil
 	}
 	return detail

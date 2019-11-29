@@ -1,0 +1,20 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: demo-cronjob
+  labels:
+    app: demo-cronjob
+spec:
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: busybox
+              image: busybox
+              command:
+                - echo
+                - "Hello"
+          restartPolicy: OnFailure
+  schedule: "*/1 * * * *"
+

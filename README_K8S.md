@@ -62,12 +62,16 @@ spec
 
 
 - Pod
+- ReplicaSet
 - Service
 - Secret
 - ConfigMap
 - Deployment
 - PersistentVolumeClaim
 - PersistentVolume
+- Job
+- CronJob
+- HorizontalPodAutoscaler
 
 ### 3. 各组建的交互逻辑
 

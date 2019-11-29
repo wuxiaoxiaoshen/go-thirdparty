@@ -19,10 +19,10 @@ var Admins *AdminAction
 
 func init() {
 	// broker: 代表的就是 kafka 主机
-	Server = NewKafkaAction([]string{"47.93.81.180:9092"})
-	Brokers = NewBrokerAction("47.93.81.180:9092")
+	//Server = NewKafkaAction([]string{"119.3.198.221:32180"})
+	//Brokers = NewBrokerAction("119.3.198.221:32180")
 	//Brokers = NewBrokerAction("127.0.0.1:9092"), "127.0.0.1:19092", "127.0.0.1:39092"
-	Admins = NewAdminAction([]string{"47.93.81.180:9092"})
+	Admins = NewAdminAction([]string{"119.3.198.221:32180"})
 }
 
 func newApp() *iris.Application {

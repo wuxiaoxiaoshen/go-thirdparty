@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: podsecret
+  labels:
+    app: podsecret
+spec:
+  volumes:
+    - name: secret
+      projected:
+        sources:
+          - secret:
+              name: user
+          - secret:
+              name: passwd
+  containers:
+    - name: busybox
+      imagePullPolicy: Always
+      image: busybox
+      ports:
+        - containerPort: 80
+      volumeMounts:
+        - mountPath: /data
+          name: secret-demo
+          readOnly: true
