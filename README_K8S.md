@@ -72,6 +72,9 @@ spec
 - Job
 - CronJob
 - HorizontalPodAutoscaler
+- Role/RoleBinding
+- ClusterRole/ClusterRoleBinding
+
 
 ### 3. 各组建的交互逻辑
 
