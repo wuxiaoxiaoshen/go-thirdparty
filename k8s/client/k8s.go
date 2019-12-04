@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	v1 "k8s.io/api/core/v1"
 	"log"
 	"os"
 	"path/filepath"
@@ -33,15 +34,33 @@ func NewK8SClusterAction(path string) *K8SClusterAction {
 
 var DefaultK8SClusterAction = &K8SClusterAction{}
 
-func (K *K8SClusterAction) GetPods(namespace string) {
+func (K *K8SClusterAction) GetPods(namespace string) []string{
 	pods, e := K.client.CoreV1().Pods(namespace).List(metav1.ListOptions{})
 	if e != nil {
 		log.Println("k8s: get pods fail")
-		return
+		return nil
 	}
+	var result []string
 	fmt.Println("pods number", len(pods.Items))
 	for _, i := range pods.Items {
-		fmt.Println(i.Name)
+		fmt.Println("Pod Name:", i.Name)
+		result = append(result, i.Name)
 	}
+	return result
 
+}
+
+func (K *K8SClusterAction) GetDeployment(namespace string) {
+	if namespace == "" {
+		namespace =  v1.NamespaceDefault
+	}
+	deployment := K.client.AppsV1().Deployments(namespace)
+	d,e := deployment.List(metav1.ListOptions{})
+	if e!=nil{
+		log.Println("k8s: deployment is nil")
+		return
+	}
+	for _, i:=range d.Items{
+		fmt.Println("Deployment Name: ",i.Name)
+	}
 }
