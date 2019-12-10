@@ -38,3 +38,17 @@
 ## NSQ
 
 - [NSQ 说明](README_NSQ.md)
+
+## Redis
+
+## ElasticSearch
+
+## Kubernetes
+
+## Docker
+
+## Mysql
+
+
+
+> 3 年水平技能总结
