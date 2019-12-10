@@ -43,6 +43,7 @@ services:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.5.0
     container_name: es_01
     environment:
+      - "http.host=0.0.0.0"
       - "cluster.name=es-clustername"
       - "node.name=es_01"
       - "bootstrap.memory_lock=true"
@@ -63,6 +64,7 @@ services:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.5.0
     container_name: es_02
     environment:
+      - "http.host=0.0.0.0"
       - "cluster.name=es-clustername"
       - "node.name=es_02"
       - "bootstrap.memory_lock=true"
@@ -81,6 +83,7 @@ services:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.5.0
     container_name: es_03
     environment:
+      - "http.host=0.0.0.0"
       - "cluster.name=es-clustername"
       - "node.name=es_03"
       - "bootstrap.memory_lock=true"
