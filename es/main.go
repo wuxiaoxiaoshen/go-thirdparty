@@ -8,5 +8,9 @@ func main(){
 	// document
 	//ExampleDocument()
 	// catAPI
-	ExampleCatAPI()
+	//ExampleCatAPI()
+	// search
+	//ExampleSearchInfo()
+	// analyze
+	ExampleAnalyze()
 }
