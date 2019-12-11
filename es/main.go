@@ -6,6 +6,7 @@ func main(){
 	// client
 	//ExampleEsClient()
 	// document
-	ExampleDocument()
-
+	//ExampleDocument()
+	// catAPI
+	ExampleCatAPI()
 }

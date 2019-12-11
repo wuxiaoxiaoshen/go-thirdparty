@@ -64,6 +64,24 @@ func (D Document) Get(index string,id string,client *elasticsearch.Client) (bool
 	return true, response.String()
 
 }
+func (D Document) Update(index string, id string,doc interface{}, client *elasticsearch.Client)(bool,string) {
+	var (
+		response *esapi.Response
+		e error
+	)
+	client.Update(index,id, esutil.NewJSONReader(doc), func(request *esapi.UpdateRequest) {
+		request.Pretty = true
+		request.Human = true
+		response, e = request.Do(context.TODO(), client)
+	})
+	if e!=nil{
+		log.Println(e)
+		return false, "nil"
+	}
+	return true, response.String()
+
+}
+
 func (D Document) FindAll() {}
 
 func (D Document) InsertOne(ctx context.Context, client *elasticsearch.Client,doc DocumentFields)(bool,string) {
@@ -98,5 +116,14 @@ func ExampleDocument() {
 	}else{
 		log.Println(content)
 	}
+	updateDoc := struct {
+		DocumentFields
+		Hello string `json:"hello"`
+	}{}
+	updateDoc.DocumentFields = doc
+	updateDoc.Title = "java"
+	updateDoc.Hello = "Hello Java"
+	fmt.Println(updateDoc)
+	fmt.Println(DefaultDocument.Update("java", updateDoc.ID, updateDoc, DefaultElasticSearchAction.client))
 
 }
