@@ -9,8 +9,8 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/kataras/iris"
-	"github.com/kataras/iris/middleware/recover"
+	"github.com/kataras/iris/v12"
+	"github.com/kataras/iris/v12/middleware/recover"
 )
 
 var Server *KafkaAction

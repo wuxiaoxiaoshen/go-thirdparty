@@ -3,7 +3,6 @@ module github.com/wuxiaoxiaoshen/go-thirdparty
 go 1.13
 
 require (
-	github.com/CloudyKit/fastprinter v0.0.0-20170127035650-74b38d55f37a // indirect
 	github.com/Shopify/sarama v1.24.1
 	github.com/ajg/form v1.5.1 // indirect
 	github.com/elastic/go-elasticsearch/v7 v7.5.0
@@ -14,7 +13,7 @@ require (
 	github.com/google/go-querystring v1.0.0 // indirect
 	github.com/imkira/go-interpol v1.1.0 // indirect
 	github.com/k0kubun/colorstring v0.0.0-20150214042306-9440f1994b88 // indirect
-	github.com/kataras/iris v11.2.8+incompatible
+	github.com/kataras/iris/v12 v12.1.8
 	github.com/mattn/go-colorable v0.1.4 // indirect
 	github.com/moul/http2curl v1.0.0 // indirect
 	github.com/nsqio/go-nsq v1.0.7
@@ -30,7 +29,6 @@ require (
 	github.com/yudai/gojsondiff v1.0.0 // indirect
 	github.com/yudai/golcs v0.0.0-20170316035057-ecda9a501e82 // indirect
 	github.com/yudai/pp v2.0.1+incompatible // indirect
-	golang.org/x/text v0.3.2 // indirect
 	gopkg.in/check.v1 v1.0.0-20180628173108-788fd7840127 // indirect
 	k8s.io/api v0.0.0-20190620084959-7cf5895f2711
 	k8s.io/apimachinery v0.0.0-20190612205821-1799e75a0719
