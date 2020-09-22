@@ -36,3 +36,4 @@ func (P *PoolAction) Close() {
 func (P *PoolAction) Get() redis.Conn {
 	return P.Pool.Get()
 }
+

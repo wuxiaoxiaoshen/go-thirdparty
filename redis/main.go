@@ -8,7 +8,7 @@ func init() {
 	poolAction = NewPoolAction("0.0.0.0:6377")
 }
 
-func main() {
+func Example() {
 	con := poolAction.Get()
 	{
 		// string
@@ -44,4 +44,14 @@ func main() {
 		v, ok := LAction.LRange("list::A", 0, -1)
 		fmt.Println(v, ok)
 	}
+}
+
+func main(){
+	ExampleSentinel()
+}
+
+func ExampleSentinel(){
+	sentinel :=NewSentinelAction("mymaster", []string{":26376", ":26378", ":26377"}, "admin")
+	fmt.Println(sentinel.Client.Ping().String())
+	fmt.Println(sentinel.Client.DBSize())
 }

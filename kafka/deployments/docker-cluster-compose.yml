@@ -34,7 +34,7 @@ services:
     hostname: kfk1
     restart: always
     ports:
-      - 9092:9092
+      - 19092:19092
       - 19999:9999
     expose:
       - 19092
@@ -45,8 +45,8 @@ services:
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper-1:2181,zookeeper-2:2181,zookeeper-3:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kfk1:9092
-      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kfk1:19092
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:19092
   kfk2:
     image: index.docker.io/wurstmeister/kafka:latest
     container_name: kfk2
