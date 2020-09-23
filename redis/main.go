@@ -47,11 +47,20 @@ func Example() {
 }
 
 func main(){
-	ExampleSentinel()
+	//ExampleSentinel()
+	ExampleCluster()
 }
 
 func ExampleSentinel(){
 	sentinel :=NewSentinelAction("mymaster", []string{":26376", ":26378", ":26377"}, "admin")
 	fmt.Println(sentinel.Client.Ping().String())
 	fmt.Println(sentinel.Client.DBSize())
+}
+func ExampleCluster(){
+	cluster := NewClusterAction()
+	fmt.Println(cluster.Client.Get("hello"))
+	cluster.Client.Set("world", "hello",0)
+	fmt.Println(cluster.Client.Get("world"))
+	fmt.Println(cluster.Client.DBSize())
+	fmt.Println(cluster.Client.ClusterNodes())
 }
