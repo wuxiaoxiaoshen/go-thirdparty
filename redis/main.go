@@ -47,14 +47,17 @@ func Example() {
 }
 
 func main(){
-	//ExampleSentinel()
-	ExampleCluster()
+	ExampleSentinel()
+	//ExampleCluster()
 }
 
 func ExampleSentinel(){
 	sentinel :=NewSentinelAction("mymaster", []string{":26376", ":26378", ":26377"}, "admin")
 	fmt.Println(sentinel.Client.Ping().String())
 	fmt.Println(sentinel.Client.DBSize())
+	for i:=0;i<1000000000;i++{
+		sentinel.Client.Do("sadd", "sentinel:test", i)
+	}
 }
 func ExampleCluster(){
 	cluster := NewClusterAction()
