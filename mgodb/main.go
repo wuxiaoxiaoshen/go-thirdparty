@@ -37,6 +37,7 @@ func main() {
 	findRecord(ctx, collection)
 	deleteRecord(ctx,collection)
 	updateRecord(ctx,collection)
+	aggregate(ctx, collection)
 
 }
 
@@ -197,5 +198,28 @@ func updateRecord(ctx context.Context, col *mongo.Collection){
 		log.Println("records updates fail")
 	}else{
 		log.Println("record updates success")
+	}
+}
+
+func aggregate(ctx context.Context, col *mongo.Collection){
+	pipeline := bson.D{
+
+		{"$group", bson.D{
+				{"_id", "$name"},
+				{"age", bson.D{
+					{
+						"$sum", "$age", // $sum, $avg, $max, $min, $first, $last
+					},
+				}},
+		}},
+	}
+	results, e := col.Aggregate(ctx, mongo.Pipeline{pipeline})
+	if e!=nil{
+		log.Println(e)
+	}
+	for results.Next(ctx){
+		var a bson.D
+		results.Decode(&a)
+		fmt.Println(a)
 	}
 }
