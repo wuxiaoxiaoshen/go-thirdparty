@@ -27,19 +27,54 @@ func main() {
 		log.Fatal(err)
 	}
 	defer client.Disconnect(ctx)
+	fmt.Println("database")
+	listDataBaseName(ctx, client)
+	fmt.Println("collections")
+	listCollections(ctx, client)
+
+
 	collection := client.Database("test").Collection("table1")
 	findRecord(ctx, collection)
+	deleteRecord(ctx,collection)
+	updateRecord(ctx,collection)
 
 }
 
-type Collection struct {
 
-}
 
 type Database struct {
-
+	Name string
+	Size int64
 }
 
+func listDataBaseName(ctx context.Context, client *mongo.Client){
+	results, e := client.ListDatabases(ctx, bson.D{})
+	if e!=nil{
+		log.Println(e)
+	}
+	for index, i :=range results.Databases{
+		var one Database
+		one.Name = i.Name
+		one.Size = i.SizeOnDisk
+		fmt.Println(index, one)
+
+
+	}
+
+}
+type Collection struct {
+	Name string
+}
+
+func listCollections(ctx context.Context, client *mongo.Client){
+	// 先获取 database
+	// 在获取 collection
+	results , _ := client.ListDatabaseNames(ctx, bson.D{})
+	for _,i :=range results{
+		collections ,_:= client.Database(i).ListCollectionNames(ctx, bson.D{})
+		fmt.Println(fmt.Sprintf("db: %s, collections: %v",i,collections))
+	}
+}
 func insertRecord(ctx context.Context, col *mongo.Collection){
 	// 1. 可以构建 bson.D 对象
 	// 2. 也可以构建自定义的 struct 对象
@@ -90,6 +125,77 @@ func findRecord(ctx context.Context, col *mongo.Collection){
 		fmt.Println("findAll", result)
 	}
 
+	filter = bson.D{{
+		"age", bson.D{
+			{"$lte", 19},
+		},
+	}}
+	cursor, e = col.Find(ctx, filter)
+	if e!=nil{
+		log.Println(e)
+	}
+	var resultsAll []Post
+	e = cursor.All(ctx, &resultsAll)
+	if e!=nil{
+		log.Println(e)
+	}
+	fmt.Println(resultsAll)
+
+
+	filter = bson.D{
+		{"$or", bson.A{
+			bson.D{{"name","xiewei"}},
+			bson.D{{"name", "paul"}},
+		}},
+	}
+	var re []interface{}
+	cursor, e = col.Find(ctx, filter)
+	if e!=nil{
+		log.Println(e)
+	}
+	cursor.All(ctx, &re)
+	for index, i :=range re{
+		fmt.Println(index, i)
+	}
 }
-func deleteRecord(){}
-func updateRecord(){}
+func deleteRecord(ctx context.Context, col *mongo.Collection){
+	filter := bson.D{
+		{
+			"students",1,
+		},
+	}
+	results, e := col.DeleteOne(ctx, filter)
+	if e!=nil{
+		log.Println(e)
+	}
+	if results.DeletedCount==0{
+		log.Println("record not exists")
+	}else{
+		log.Println("delete record success")
+	}
+}
+func updateRecord(ctx context.Context, col *mongo.Collection){
+	filter := bson.D{
+		{
+			"name", 1,
+		},
+	}
+	updates := bson.D{{
+		"$set", bson.D{{
+			"name", "paul",
+		}},
+	}}
+	results, e := col.UpdateOne(ctx, filter, updates)
+	if e!=nil{
+		log.Println(e)
+	}
+	if results.MatchedCount==0{
+		log.Println("record not found")
+		return
+	}
+	if results.ModifiedCount==0{
+		log.Println("records updates fail")
+	}else{
+		log.Println("record updates success")
+	}
+}
