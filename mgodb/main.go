@@ -18,15 +18,18 @@ type Post struct {
 
 func main() {
 	client, err := mongo.NewClient(options.Client().ApplyURI("mongodb://localhost:27017"))
+	client2, err := mongo.NewClient(options.Client().ApplyURI("mongodb://localhost:27018,localhost:27019,localhost:27020/?replicaSet=rs0"))
 	if err != nil {
 		log.Fatal(err)
 	}
 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
 	err = client.Connect(ctx)
+	err = client2.Connect(ctx)
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer client.Disconnect(ctx)
+	defer client2.Disconnect(ctx)
 	fmt.Println("database")
 	listDataBaseName(ctx, client)
 	fmt.Println("collections")
@@ -38,6 +41,7 @@ func main() {
 	deleteRecord(ctx,collection)
 	updateRecord(ctx,collection)
 	aggregate(ctx, collection)
+	replicate(ctx, client2)
 
 }
 
@@ -222,4 +226,34 @@ func aggregate(ctx context.Context, col *mongo.Collection){
 		results.Decode(&a)
 		fmt.Println(a)
 	}
+}
+
+func replicate(ctx context.Context, client *mongo.Client){
+	/*
+	如何构建副本机制？
+	1. 启动多个实例
+	2. 执行 rs.initiate() 命令
+	3. 验证 rs.status(), rs.slaveOK(), rs.secondaryOK()
+	*/
+	col := client.Database("test").Collection("name")
+	var result interface{}
+	filter := bson.D{
+		{"age",20},
+	}
+	err := col.FindOne(ctx, filter).Decode(&result)
+	if err!=nil{
+		log.Println(err)
+	}
+	fmt.Println("repl", result)
+
+	cursor, e := col.Find(ctx, bson.D{})
+	if e!=nil{
+		log.Println(e)
+	}
+	var all []interface{}
+	cursor.All(ctx, &all)
+	for index, i := range all{
+		fmt.Println(index, i)
+	}
+
 }
