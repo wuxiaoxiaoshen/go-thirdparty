@@ -17,30 +17,30 @@ type Post struct {
 }
 
 func main() {
-	client, err := mongo.NewClient(options.Client().ApplyURI("mongodb://localhost:27017"))
+	//client, err := mongo.NewClient(options.Client().ApplyURI("mongodb://localhost:27017"))
 	client2, err := mongo.NewClient(options.Client().ApplyURI("mongodb://localhost:27018,localhost:27019,localhost:27020/?replicaSet=rs0"))
 	if err != nil {
 		log.Fatal(err)
 	}
 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
-	err = client.Connect(ctx)
+	//err = client.Connect(ctx)
 	err = client2.Connect(ctx)
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer client.Disconnect(ctx)
+	//defer client.Disconnect(ctx)
 	defer client2.Disconnect(ctx)
-	fmt.Println("database")
-	listDataBaseName(ctx, client)
-	fmt.Println("collections")
-	listCollections(ctx, client)
+	//fmt.Println("database")
+	//listDataBaseName(ctx, client)
+	//fmt.Println("collections")
+	//listCollections(ctx, client)
 
 
-	collection := client.Database("test").Collection("table1")
-	findRecord(ctx, collection)
-	deleteRecord(ctx,collection)
-	updateRecord(ctx,collection)
-	aggregate(ctx, collection)
+	//collection := client.Database("test").Collection("table1")
+	//findRecord(ctx, collection)
+	//deleteRecord(ctx,collection)
+	//updateRecord(ctx,collection)
+	//aggregate(ctx, collection)
 	replicate(ctx, client2)
 
 }
