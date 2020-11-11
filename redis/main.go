@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"github.com/go-redis/redis/v7"
+)
 
 var poolAction *PoolAction
 
@@ -55,9 +58,25 @@ func ExampleSentinel(){
 	sentinel :=NewSentinelAction("mymaster", []string{":26376", ":26378", ":26377"}, "admin")
 	fmt.Println(sentinel.Client.Ping().String())
 	fmt.Println(sentinel.Client.DBSize())
-	for i:=0;i<1000000000;i++{
-		sentinel.Client.Do("sadd", "sentinel:test", i)
+	//for i:=0;i<1000000000;i++{
+	//	sentinel.Client.Do("sadd", "sentinel:test", i)
+	//}
+	keys := "tv:anchor:rank"
+	results, _ := sentinel.Client.ZRangeWithScores(keys, 0, -1).Result()
+	for _,i := range results{
+		fmt.Println(i)
 	}
+	re, _ := sentinel.Client.ZRevRangeByScoreWithScores(
+		keys, &redis.ZRangeBy{
+			Min: "0",
+			Max: "+inf",
+			Count: 10,
+		}).Result()
+	for _, i :=range re{
+		fmt.Println(i)
+	}
+
+
 }
 func ExampleCluster(){
 	cluster := NewClusterAction()

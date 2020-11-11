@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
 	"time"
@@ -40,9 +41,24 @@ func main() {
 	//findRecord(ctx, collection)
 	//deleteRecord(ctx,collection)
 	//updateRecord(ctx,collection)
-	//aggregate(ctx, collection)
+	aggregate(ctx, client2.Database("test").Collection("name"))
 	replicate(ctx, client2)
+	col := client2.Database("tv").Collection("users")
+	ob1, _ := primitive.ObjectIDFromHex("5faa38b0edb1feba97746e10")
+	filter := bson.D{
+		{"_id", ob1},
+		{"base.deleted_at", bson.M{"$exists":false}},
+	}
+	var user User
+	col.FindOne(context.Background(), filter).Decode(&user)
+	fmt.Println("no deleted_at", user)
+	//insertRecord(ctx, client2.Database("tv").Collection("users"))
 
+	filter = bson.D{
+		{"base.deleted_at", bson.M{"$exists":true}},
+	}
+	col.FindOne(context.Background(), filter).Decode(&user)
+	fmt.Println("deleted_at", user)
 }
 
 
@@ -80,14 +96,43 @@ func listCollections(ctx context.Context, client *mongo.Client){
 		fmt.Println(fmt.Sprintf("db: %s, collections: %v",i,collections))
 	}
 }
+
+type User struct {
+	Base
+	ID primitive.ObjectID `bson:"_id,omitempty"`
+	Name string `bson:"name,omitempty"`
+	Age string `bson:"age,omitempty"`
+	Desc string `bson:"desc,omitempty"`
+}
+type Base struct {
+	CreatedAt time.Time `bson:"created_at,omitempty"`
+	UpdateAt time.Time `bson:"update_at,omitempty"`
+	DeletedAt time.Time `bson:"deleted_at,omitempty"`
+}
 func insertRecord(ctx context.Context, col *mongo.Collection){
 	// 1. 可以构建 bson.D 对象
 	// 2. 也可以构建自定义的 struct 对象
-	re, e := col.InsertOne(ctx, bson.D{
-		{"name", "douyou"},
-		{"age", 20},
-		{"student", 400},
-	})
+	var p User
+	 p.Name = "xiewei"
+	 p.Age = "20"
+	 p.Desc = "hi"
+	now := time.Now()
+	p = User{
+		Base: Base{
+			CreatedAt: now,
+			UpdateAt: now,
+		},
+		Name:  p.Name,
+		Desc: p.Desc,
+		Age: p.Age,
+	}
+
+	//re, e := col.InsertOne(ctx, bson.D{
+	//	{"name", "douyou"},
+	//	{"age", 20},
+	//	{"student", 400},
+	//})
+	re, e := col.InsertOne(ctx, p)
 	if e!=nil{
 		log.Println(e)
 	}
@@ -224,7 +269,22 @@ func aggregate(ctx context.Context, col *mongo.Collection){
 	for results.Next(ctx){
 		var a bson.D
 		results.Decode(&a)
-		fmt.Println(a)
+		fmt.Println(2,a)
+	}
+
+	filter := bson.D{
+		{"$match", bson.D{{"age",20}}},
+		{"$project", bson.D{{"Age", "$age"}}},
+	}
+	results, e = col.Aggregate(ctx, mongo.Pipeline{filter})
+	if e!=nil{
+		log.Println(1,e)
+		return
+	}
+	for results.Next(ctx){
+		var a interface{}
+		results.Decode(&a)
+		fmt.Println("match, project", a)
 	}
 }
 

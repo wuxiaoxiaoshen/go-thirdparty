@@ -5,10 +5,12 @@ go 1.13
 require (
 	github.com/Shopify/sarama v1.27.0
 	github.com/ajg/form v1.5.1 // indirect
+	github.com/coreos/etcd v3.3.10+incompatible
 	github.com/elastic/go-elasticsearch/v7 v7.5.0
 	github.com/fasthttp-contrib/websocket v0.0.0-20160511215533-1f3b11f56072 // indirect
 	github.com/go-redis/redis/v7 v7.4.0
 	github.com/gogo/protobuf v1.2.0 // indirect
+	github.com/golang/protobuf v1.4.3 // indirect
 	github.com/golang/snappy v0.0.2 // indirect
 	github.com/gomodule/redigo v2.0.0+incompatible
 	github.com/google/go-querystring v1.0.0 // indirect
@@ -29,6 +31,10 @@ require (
 	github.com/yudai/golcs v0.0.0-20170316035057-ecda9a501e82 // indirect
 	github.com/yudai/pp v2.0.1+incompatible // indirect
 	go.mongodb.org/mongo-driver v1.4.2
+	golang.org/x/net v0.0.0-20201110031124-69a78807bb2b // indirect
+	golang.org/x/sys v0.0.0-20201110211018-35f3e6cf4a65 // indirect
+	golang.org/x/text v0.3.4 // indirect
+	google.golang.org/grpc v1.26.0 // indirect
 	k8s.io/api v0.0.0-20190620084959-7cf5895f2711
 	k8s.io/apimachinery v0.0.0-20190612205821-1799e75a0719
 	k8s.io/client-go v0.0.0-20190620085101-78d2af792bab
