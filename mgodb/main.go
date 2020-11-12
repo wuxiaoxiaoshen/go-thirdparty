@@ -44,6 +44,21 @@ func main() {
 	aggregate(ctx, client2.Database("test").Collection("name"))
 	replicate(ctx, client2)
 	col := client2.Database("tv").Collection("users")
+	now := time.Now()
+	japan,_ := time.LoadLocation("Asia/Tokyo")
+	update := now.In(japan)
+	var userExample = User{
+		Base:Base{
+			CreatedAt: now,
+			UpdateAt:  update,
+		},
+		Name: "Asia",
+		Age:  "100",
+		Desc:  "Hello World",
+	}
+
+	col.InsertOne(ctx, userExample)
+
 	ob1, _ := primitive.ObjectIDFromHex("5faa38b0edb1feba97746e10")
 	filter := bson.D{
 		{"_id", ob1},
@@ -52,7 +67,7 @@ func main() {
 	var user User
 	col.FindOne(context.Background(), filter).Decode(&user)
 	fmt.Println("no deleted_at", user)
-	//insertRecord(ctx, client2.Database("tv").Collection("users"))
+	insertRecord(ctx, client2.Database("tv").Collection("users"))
 
 	filter = bson.D{
 		{"base.deleted_at", bson.M{"$exists":true}},
@@ -98,7 +113,7 @@ func listCollections(ctx context.Context, client *mongo.Client){
 }
 
 type User struct {
-	Base
+	Base `bson:",inline" json:",inline"`
 	ID primitive.ObjectID `bson:"_id,omitempty"`
 	Name string `bson:"name,omitempty"`
 	Age string `bson:"age,omitempty"`
