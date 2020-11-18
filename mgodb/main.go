@@ -7,6 +7,8 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
+	"math"
+	"strings"
 	"time"
 
 	"go.mongodb.org/mongo-driver/mongo"
@@ -16,8 +18,30 @@ type Post struct {
 	Name string
 	Age int
 }
+func main(){
+	a := bson.M{}
+	a["d"] = 1
+	c := a
+	a["e"] = 2
+	fmt.Println(a)
+	fmt.Println(c)
+	fmt.Println(strings.ToLower("AutoRenew"))
+	loc, _ := time.LoadLocation("Asia/Tokyo")
+	t := time.Now().In(loc).AddDate(0,0,-7)
+	fmt.Println(t)
+	start, _ := time.Parse("2006-01-02 15:04:05", "2020-11-30 00:50:00")
+	end, _ := time.Parse("2006-01-02 15:04:05", "2020-12-01 23:59:59")
+	sub := math.Round(end.Sub(start).Hours()/24)
+	fmt.Println(sub)
+	y,m,d := end.Date()
+	t1 := time.Date(y,m,d,0,0,0,0,time.Local)
+	start1 := t1.AddDate(0,0,1)
+	fmt.Println("start", start1)
+	fmt.Println("end", end.AddDate(0,0,int(sub)))
 
-func main() {
+
+}
+func main1() {
 	//client, err := mongo.NewClient(options.Client().ApplyURI("mongodb://localhost:27017"))
 	client2, err := mongo.NewClient(options.Client().ApplyURI("mongodb://localhost:27018,localhost:27019,localhost:27020/?replicaSet=rs0"))
 	if err != nil {

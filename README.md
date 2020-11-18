@@ -51,4 +51,15 @@
 
 
 
-> 3 年水平技能总结
+## 抓包
+
+> 分析网络、client 和 Server 之间的交互协议
+
+工具：tcpdump, wireshark
+
+- tcpdump 抓取完整的包
+- wireshark 对应协议查看包的传输过程
+
+最常用法：tcp 三次握手、四次挥手
+
+Example: REDIS.sh(REDIS.cap), MONGO.sh(MONGO.cap)
