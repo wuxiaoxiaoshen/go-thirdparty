@@ -18,7 +18,11 @@ type Post struct {
 	Name string
 	Age int
 }
+
 func main(){
+	TargetExample()
+}
+func main2(){
 	a := bson.M{}
 	a["d"] = 1
 	c := a
