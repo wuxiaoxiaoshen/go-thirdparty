@@ -21,6 +21,10 @@ type Post struct {
 
 func main(){
 	TargetExample()
+	fmt.Println(math.Round(1.46))
+	fmt.Println(math.Ceil(1.46))
+	fmt.Println(math.Round(1.86))
+	fmt.Println(math.Ceil(1.86))
 }
 func main2(){
 	a := bson.M{}
