@@ -50,6 +50,7 @@ func TargetExample() {
 		result, _ := json.MarshalIndent(j, " ", " ")
 		fmt.Println(i,string(result))
 	}
+	tb.Insert()
 	//tb.Bulk().Insert()
 	//tb.Bulk().Run()
 	//tb.Insert()

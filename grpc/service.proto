@@ -1,0 +1,338 @@
+syntax = "proto3";
+
+import "example.proto";
+
+package nonoapi;
+
+service AnchorService {
+    rpc FindOne (FindOneReq) returns (FindOneRes);
+    rpc FindOneWithCache (FindOneReq) returns (FindOneRes);
+    rpc FindList (FindListReq) returns (FindListRes);
+    rpc FindListWithCache (FindListReq) returns (FindListRes);
+    rpc UpdateRoomDetail (UpdateReq) returns (UpdateRes);
+    rpc FindRoomDetail (FindRoomDetailReq) returns (FindRoomDetailRes);
+    rpc FindRoomDetailWithCache (FindRoomDetailReq) returns (FindRoomDetailRes);
+    rpc FindRoomDetails (FindRoomDetailsReq) returns (FindRoomDetailsRes);
+    // FindRoomDetailsWithCache这个接口做缓存比较困难，暂时不做
+    //rpc FindRoomDetailsWithCache (FindRoomDetailsReq) returns (FindRoomDetailsRes) {
+    //}
+
+    //下播处理live_anchors接口。
+    rpc LiveAnchorStopLive (LiveAnchorStopLiveReq) returns (LiveAnchorStopLiveRes);
+
+    rpc TransferLivePrepare (TransferLivePrepareReq) returns (TransferLivePrepareRes); //准备出团
+    rpc TransferLiveCancel (TransferLiveCancelReq) returns (TransferLiveCancelRes); //取消出团
+    rpc TransferLiveStart (TransferLiveStartReq) returns (TransferLiveStartRes); //开始出团
+    rpc TransferLiveStop (TransferLiveStopReq) returns (TransferLiveStopRes); //取消转播
+    rpc TransferLiveStatus (TransferLiveStatusReq) returns (TransferLiveStatusRes); //获取转播状态
+    rpc TransferLiveStatusWithCache (TransferLiveStatusReq) returns (TransferLiveStatusRes); //获取转播状态
+    rpc TransferLiveJoin (TransferLiveJoinReq) returns (TransferLiveJoinRes); //跟随出团
+    rpc GetAllTransferLives (GetAllTransferLivesReq) returns (GetAllTransferLivesRes); //获取所有的转播中的主播
+    rpc GetAllPrepareTransferLives (GetAllPrepareTransferLivesReq) returns (GetAllPrepareTransferLivesRes); //获取所有准备转播的主播
+    rpc GetAllToHostTransferLives (GetAllToHostTransferLivesReq) returns (GetAllToHostTransferLivesRes); //获取所有转播某主播的主播们
+
+    // 获取在线主播RPC接口(live_anchors表)，有缓存
+    rpc GetLiveAnchorsWithCache (GetLiveAnchorsWithCacheReq) returns (GetLiveAnchorsWithCacheRes);
+
+    // 正在开播主播的数据
+    rpc GetLiveAnchorsIds (GetLiveAnchorsIdsReq) returns (GetLiveAnchorsIdsRes);
+    // 推荐系统需要正在开播主播的数据
+    rpc GetLiveAnchorsInfo (GetLiveAnchorsInfoReq) returns (GetLiveAnchorsInfoRes);
+
+    // 主播开播通知
+    rpc StartLive (StartLiveRequest) returns (StartLiveResponse);
+    // 主播停播通知
+    rpc StopLive (StopLiveRequest) returns (StopLiveResponse);
+
+    rpc RealtimePlaybackOn (RealtimePlaybackOnReq) returns (RealtimePlaybackOnRsp); // 主播本场开始实时回放
+    rpc RealtimePlaybackOff (RealtimePlaybackOffReq) returns (RealtimePlaybackOffRsp); // 主播本场关闭实时回放
+    rpc GetLiveTransportResolution (GetLiveTransportResolutionReq) returns (GetLiveTransportResolutionRsp); // 获取转码配置
+    rpc KickStream (KickStreamReq) returns (KickStreamRsp);
+    rpc FindLiveAnchorMonth (FindLiveAnchorMonthReq) returns (FindLiveAnchorMonthRsp); //查询live_logs前三十天的主播ID
+    rpc FindLiveAnchorMonthCount (FindLiveAnchorMonthCountReq) returns (FindLiveAnchorMonthCountRsp); //查询live_logs前三十天的主播条数
+
+    rpc StartKaraoke (StartKaraokeRequest) returns (StartKaraokeResponse); //卡拉OK开始
+    rpc StopKaraoke (StopKaraokeRequest) returns (StopKaraokeResponse); //卡拉OK结束
+}
+
+message FindLiveAnchorMonthReq {
+    int32 page = 1;
+    int32 limit = 2;
+    int64 start_time = 3;
+    int64 end_time = 4;
+}
+message FindLiveAnchorMonthRsp {
+    repeated int32 user_ids = 1;
+}
+message FindLiveAnchorMonthCountReq {
+    int64 start_time = 1;
+    int64 end_time = 2;
+}
+message FindLiveAnchorMonthCountRsp {
+    int32 count = 1;
+}
+
+message GetLiveAnchorsIdsReq {
+}
+message GetLiveAnchorsIdsRes {
+    repeated int32 user_ids = 1;
+}
+message GetLiveAnchorsInfoReq {
+}
+message GetLiveAnchorsInfoRes {
+    repeated GetLiveAnchorsInfoBody live_anchors_info = 1;
+}
+message GetLiveAnchorsInfoBody {
+    sint64 user_id = 1;
+    sint32 viewers = 2; // 观看人数
+    string game_key = 3;
+    sint64 live_start_unix = 4;
+    sint32 live_mode = 5;
+    sint32 live_type = 6;
+    sint32 live_subtype = 7;
+    repeated string channels = 8;
+    string live_intro = 9;  // 直播介绍
+    string anchor_intro = 10 ; // 直播预告
+    string log_id = 11;
+    string game_type = 12;
+    sint32 screen_type = 13; // 0-横屏，1-竖屏
+    sint32 level = 14;   //主播等级
+    sint32 fans = 15;    // 粉丝数
+    double exp = 16; //经验值
+    string game_title = 17; // 游戏title
+    string certification_intro = 18 ; // 官方认证介绍
+    repeated string anchor_group = 19; // 主播身份
+    string user_name = 20; // 用户名称
+    sint32 transfer_live_status = 21; // 转播状态 0-直播中，1-转播中
+}
+
+message FindOneReq {
+    int32 user_id = 1;
+}
+
+message FindOneRes {
+    bytes data = 1;
+}
+
+message FindListReq {
+    repeated int32 user_ids = 1;
+}
+
+message FindListRes {
+    bytes data = 1;
+}
+
+message UpdateReq {
+    //查询条件,bson格式
+    bytes query = 1;
+    //更新的字段,bson格式
+    bytes update = 2;
+    //是否upsert
+    bool upsert = 3;
+    //是否returnNew
+    bool returnNew = 4;
+}
+
+message UpdateRes {
+    bytes data = 1;
+}
+
+message FindRoomDetailReq {
+    int32 room_id = 1;
+}
+
+message FindRoomDetailRes {
+    bytes data = 1;
+}
+
+message FindRoomDetailsReq {
+    repeated int32 room_ids = 1;
+}
+
+message FindRoomDetailsRes {
+    bytes data = 1;
+}
+
+message LiveAnchorStopLiveReq {
+    int32 host_id = 1;
+}
+
+message LiveAnchorStopLiveRes {
+    int32 code = 1;
+    string message = 2;
+}
+
+message TransferLivePrepareReq {
+    int32 host_id = 1;
+    int32 to_host_id = 2;
+}
+
+message TransferLivePrepareRes {
+    int32 code = 1;
+    string message = 2;
+}
+
+message TransferLiveCancelReq {
+    int32 host_id = 1;
+}
+
+message TransferLiveCancelRes {
+    int32 code = 1;
+    string message = 2;
+}
+
+message TransferLiveStartReq {
+    int32 host_id = 1;
+    int32 to_host_id = 2;
+}
+
+message TransferLiveStartRes {
+    int32 code = 1;
+    string message = 2;
+}
+
+message TransferLiveStopReq {
+    int32 host_id = 1;
+    int32 stop_type = 2;
+}
+
+message TransferLiveStopRes {
+    int32 code = 1;
+    string message = 2;
+}
+
+message TransferLiveStatusReq {
+    int32 host_id = 1;
+}
+
+message TransferLiveStatusRes {
+    PbTransferLive result = 1;
+}
+
+message PbTransferLive {
+    int32 host_id = 1;
+    int32 to_host_id = 2;
+    int32 transfer_live_status = 3;
+    int32 is_end = 4;
+    int32 create_at_unix = 5;
+    string object_id_hex = 6;
+}
+
+message TransferLiveJoinReq {
+    int32 host_id = 1;
+    int32 user_id = 2;
+    int32 status = 3;
+}
+
+message TransferLiveJoinRes {
+    int32 code = 1;
+    string message = 2;
+}
+
+message GetAllTransferLivesReq {
+
+}
+
+message GetAllTransferLivesRes {
+    repeated PbTransferLive result = 1;
+}
+
+message GetAllPrepareTransferLivesReq {
+
+}
+
+message GetAllPrepareTransferLivesRes {
+    repeated PbTransferLive result = 1;
+}
+
+message GetAllToHostTransferLivesReq {
+    int32 to_host_id = 1;
+}
+
+message GetAllToHostTransferLivesRes {
+    repeated PbTransferLive result = 1;
+}
+
+// live_anchors排序规则
+enum LiveAnchorsSortType {
+    Unused = 0; // 未使用
+    LiveStartDesc = 1; // -live_start
+}
+
+message GetLiveAnchorsWithCacheReq {
+    LiveAnchorsSortType SortType = 1;
+    repeated int64 WithinUidList = 2;
+    repeated int64 WithoutUidList = 3;
+}
+
+message GetLiveAnchorsWithCacheRes {
+    bytes Data = 1;
+}
+
+// 主播开播通知请求
+message StartLiveRequest {
+    bytes Data = 1;
+    int32 user_id = 2;
+}
+
+// 主播开播通知响应
+message StartLiveResponse {
+}
+
+// 主播停播通知请求
+message StopLiveRequest {
+    uint64 UserId = 1; // 主播ID
+}
+
+// 主播停播通知响应
+message StopLiveResponse {
+}
+
+message RealtimePlaybackOnReq {
+    int32 host_id = 1;
+}
+message RealtimePlaybackOnRsp {
+}
+
+message RealtimePlaybackOffReq {
+    int32 user_id = 1;
+    string realtime_v_id = 2;
+}
+message RealtimePlaybackOffRsp {
+}
+
+message GetLiveTransportResolutionReq {
+    int32 room_id = 1;
+    int32 pixel = 2;
+}
+message GetLiveTransportResolutionRsp {
+    bytes data = 1;
+}
+
+message KickStreamReq {
+    int32 room_id = 1;
+    bool expired_stream_key = 2;
+}
+message KickStreamRsp {
+}
+
+message StartKaraokeRequest {
+    int32 user_id = 1;
+    int32 song_id = 2;
+    string name = 3;
+    string artist = 4;
+}
+
+message StartKaraokeResponse {
+    int32 code = 1;
+    string message = 2;
+}
+
+message StopKaraokeRequest {
+    int32 user_id = 1;
+}
+
+message StopKaraokeResponse {
+    int32 code = 1;
+    string message = 2;
+}

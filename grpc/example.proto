@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package nonoapi;
+
+enum SigningType {
+  AutoRenew = 0;
+  Normal = 1;
+}
+

@@ -1,7 +1,10 @@
 package main
 
 import (
+	"bytes"
 	"context"
+	"crypto/md5"
+	"encoding/hex"
 	"fmt"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -25,6 +28,13 @@ func main(){
 	fmt.Println(math.Ceil(1.46))
 	fmt.Println(math.Round(1.86))
 	fmt.Println(math.Ceil(1.86))
+	secret := "PhRyzxzTYKJ5kPA8k6tRa25NPIQk5HY5la0uYMPjhtQubRnnQJHMxtPc5ZkXWTu"
+	var buffer bytes.Buffer
+	buffer.WriteString(secret)
+	h := md5.New()
+	h.Write(buffer.Bytes())
+	expectSign := hex.EncodeToString(h.Sum(nil))
+	fmt.Println(expectSign)
 }
 func main2(){
 	a := bson.M{}
