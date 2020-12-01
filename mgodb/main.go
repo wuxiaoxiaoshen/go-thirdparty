@@ -1,10 +1,7 @@
 package main
 
 import (
-	"bytes"
 	"context"
-	"crypto/md5"
-	"encoding/hex"
 	"fmt"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -24,17 +21,21 @@ type Post struct {
 
 func main(){
 	TargetExample()
-	fmt.Println(math.Round(1.46))
-	fmt.Println(math.Ceil(1.46))
-	fmt.Println(math.Round(1.86))
-	fmt.Println(math.Ceil(1.86))
-	secret := "PhRyzxzTYKJ5kPA8k6tRa25NPIQk5HY5la0uYMPjhtQubRnnQJHMxtPc5ZkXWTu"
-	var buffer bytes.Buffer
-	buffer.WriteString(secret)
-	h := md5.New()
-	h.Write(buffer.Bytes())
-	expectSign := hex.EncodeToString(h.Sum(nil))
-	fmt.Println(expectSign)
+	//fmt.Println(math.Round(1.46))
+	//fmt.Println(math.Ceil(1.46))
+	//fmt.Println(math.Round(1.86))
+	//fmt.Println(math.Ceil(1.86))
+	//secret := "PhRyzxzTYKJ5kPA8k6tRa25NPIQk5HY5la0uYMPjhtQubRnnQJHMxtPc5ZkXWTu"
+	//var buffer bytes.Buffer
+	//buffer.WriteString(secret)
+	//h := md5.New()
+	//h.Write(buffer.Bytes())
+	//expectSign := hex.EncodeToString(h.Sum(nil))
+	//fmt.Println(expectSign)
+	//a , _:= time.Parse("2006-01-02 15:04:05", "2020-11-24 00:00:00")
+	//b , _:= time.Parse("2006-01-02 15:04:05", "2020-11-24 23:59:59")
+	//fmt.Println(math.Ceil(b.Sub(a).Hours()/24))
+	//fmt.Println(math.Round(b.Sub(a).Hours()/24))
 }
 func main2(){
 	a := bson.M{}
