@@ -19,8 +19,8 @@ type Post struct {
 	Age int
 }
 
-func main(){
-	TargetExample()
+func main1(){
+	//TargetExample()
 	//fmt.Println(math.Round(1.46))
 	//fmt.Println(math.Ceil(1.46))
 	//fmt.Println(math.Round(1.86))
@@ -60,7 +60,7 @@ func main2(){
 
 
 }
-func main1() {
+func main3() {
 	//client, err := mongo.NewClient(options.Client().ApplyURI("mongodb://localhost:27017"))
 	client2, err := mongo.NewClient(options.Client().ApplyURI("mongodb://localhost:27018,localhost:27019,localhost:27020/?replicaSet=rs0"))
 	if err != nil {
@@ -373,5 +373,10 @@ func replicate(ctx context.Context, client *mongo.Client){
 	for index, i := range all{
 		fmt.Println(index, i)
 	}
+
+}
+
+func main(){
+	//client2, _ := mongo.NewClient(options.Client().ApplyURI("mongodb://localhost:27017,localhost:27018,localhost:27019,localhost:27020/?replicaSet=rs0"))
 
 }

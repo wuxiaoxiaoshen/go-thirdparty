@@ -5,6 +5,9 @@ go 1.13
 require (
 	github.com/Shopify/sarama v1.27.0
 	github.com/ajg/form v1.5.1 // indirect
+	github.com/apache/rocketmq-client-go v1.2.4
+	github.com/asim/go-bson v0.0.0-20160318195205-84522947cabd // indirect
+	github.com/chilts/sid v0.0.0-20190607042430-660e94789ec9
 	github.com/coreos/etcd v3.3.10+incompatible
 	github.com/elastic/go-elasticsearch/v7 v7.5.0
 	github.com/fasthttp-contrib/websocket v0.0.0-20160511215533-1f3b11f56072 // indirect
@@ -17,11 +20,17 @@ require (
 	github.com/imkira/go-interpol v1.1.0 // indirect
 	github.com/k0kubun/colorstring v0.0.0-20150214042306-9440f1994b88 // indirect
 	github.com/kataras/iris/v12 v12.1.8
+	github.com/kjk/betterguid v0.0.0-20170621091430-c442874ba63a
 	github.com/moul/http2curl v1.0.0 // indirect
 	github.com/nsqio/go-nsq v1.0.7
+	github.com/oklog/ulid v1.3.1
+	github.com/rs/xid v1.2.1
+	github.com/satori/go.uuid v1.2.0
+	github.com/segmentio/ksuid v1.0.3
 	github.com/sergi/go-diff v1.0.0 // indirect
 	github.com/shurcooL/sanitized_anchor_name v1.0.0 // indirect
 	github.com/smartystreets/goconvey v1.6.4 // indirect
+	github.com/sony/sonyflake v1.0.0
 	github.com/streadway/amqp v0.0.0-20190827072141-edfb9018d271
 	github.com/tal-tech/go-zero v1.0.28 // indirect
 	github.com/valyala/fasthttp v1.6.0 // indirect

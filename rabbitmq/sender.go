@@ -44,7 +44,8 @@ func (R *RabbitMQAction) Publish(name string, body string) bool {
 		return false
 	}
 	q := R.queueDeclare(name)
-	e = ch.Publish("", q.Name, false, false, amqp.Publishing{
+	e = ch.Publish("", q.Name, false, false,
+		amqp.Publishing{
 		ContentType: "text/plain",
 		Body:        []byte(body),
 	})

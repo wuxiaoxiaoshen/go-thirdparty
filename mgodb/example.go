@@ -12,7 +12,7 @@ type ClientForRemote struct {
 }
 
 func (c *ClientForRemote) Dial() {
-	s , e := mgo.Dial("mongodb://hw-sg-mildom-test2.livenono.com:27103")
+	s , e := mgo.Dial("mongodb://localhost:27017")
 	if e!=nil{
 		log.Println(e)
 	}
